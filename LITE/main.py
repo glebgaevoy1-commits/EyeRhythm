@@ -1,8 +1,6 @@
 import pygame
 from LITE.game import Game
+from LITE.states import *
 
-g = Game()
-
-while g.running:
-    g.game_loop()
-
+game = Game()
+game.run()
