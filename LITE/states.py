@@ -205,5 +205,5 @@ class EndState(BaseState):
         # Draw game over elements here
         self.draw_text("THE END. yay1!11!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 100)
         self.draw_text("Press q to exit.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 150, 50)
-        self.draw_text("Press r to restart.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 100, 50)
+        self.draw_text("Press r to restart. (buggy)", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 100, 50)
 
