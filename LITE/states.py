@@ -194,6 +194,8 @@ class GameplayState(BaseState):
 class EndState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:  # try to make it automatic
+            self.game.state = "START"
 
     def update(self, blinked=False):
         pass
@@ -202,5 +204,6 @@ class EndState(BaseState):
         self.game.screen.fill((255, 255, 0))
         # Draw game over elements here
         self.draw_text("THE END. yay1!11!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 100)
-        self.draw_text("Press q to exit.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 100, 50)
+        self.draw_text("Press q to exit.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 150, 50)
+        self.draw_text("Press r to restart.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 100, 50)
 
