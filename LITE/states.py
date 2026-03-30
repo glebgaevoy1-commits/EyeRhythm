@@ -179,6 +179,9 @@ class GameplayState(BaseState):
 
             self.ball_size = abs(self.next_beat_time - current_time)
 
+        if self.hits >= 5:
+            self.level_finished = True
+
     def render(self):
         if not self.level_finished:
             self.game.screen.fill((255, 255, 255))
@@ -198,5 +201,6 @@ class EndState(BaseState):
     def render(self):
         self.game.screen.fill((255, 255, 0))
         # Draw game over elements here
-        self.draw_text("THE END. Yay!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 100)
+        self.draw_text("THE END. yay1!11!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 100)
+        self.draw_text("Press q to exit.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 100, 50)
 
