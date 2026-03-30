@@ -49,7 +49,7 @@ class BlinkDetector:
                     self.eyes_closed = True  # Fix the self-reference
                     blinked_this_frame = True  # Set the local flag for THIS frame
                     self.blink_cnt_1 += 1
-                    print("BLINK DETECTED", self.blink_cnt_1)
+                    # print("BLINK DETECTED", self.blink_cnt_1)
                 elif not currently_closed and self.eyes_closed:
                     self.eyes_closed = False
 

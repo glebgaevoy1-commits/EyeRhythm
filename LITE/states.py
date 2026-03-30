@@ -1,4 +1,11 @@
 import pygame
+import cv2
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+from LITE.configs import precision_window
+
+from game_gui import RythmBall
 
 
 class BaseState:
@@ -93,7 +100,7 @@ class CalibrationState(BaseState):
         self.yellow_flag = False
 
     def handle_events(self, event):
-        if self.blink_cnt >= 10:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.blink_cnt >= 10: #try to make it automatic
             self.game.state = "GAMEPLAY"
         super().handle_events(event)
 
@@ -131,6 +138,7 @@ class GameplayState(BaseState):
         super().__init__(game)
         self.hits = 0
         self.misses = 0
+        self.beatcnt = 0
         self.total_blinks = 0
 
         self.win_amm = 10
@@ -138,16 +146,46 @@ class GameplayState(BaseState):
 
         self.misses_in_a_row = 0
 
+        #GUI
+        self.rball = RythmBall(self.game.screen, (self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2))
+        self.ballsize = 1000
+
+        #LOGIC
+        self.beat_interval = 2000
+        self.next_beat_time = pygame.time.get_ticks() + self.beat_interval
+
+        self.level_finished = False
+
     def handle_events(self, event):
         super().handle_events(event)
-
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.level_finished: #try to make it automatic
+            self.game.state = "END"
 
     def update(self, blinked=False):
-        pass
+        if not self.level_finished:
+            current_time = pygame.time.get_ticks()
+
+            if current_time >= self.next_beat_time:
+                self.next_beat_time += self.beat_interval
+                self.beatcnt += 1
+
+            if blinked:
+                if self.next_beat_time - 200 <= current_time <= self.next_beat_time + 200: #change 200 to precision window from configs
+                    self.hits += 1
+                    print("HIT!", self.hits)
+                else:
+                    self.misses += 1
+                    print("MISS!", self.misses)
+
+            self.ball_size = abs(self.next_beat_time - current_time)
 
     def render(self):
-        self.game.screen.fill((255, 255, 255))  # Yellow screen
-        self.draw_text("not done yet.", 100, 100, 50)
+        if not self.level_finished:
+            self.game.screen.fill((255, 255, 255))
+            self.rball.draw(self.ball_size)
+        else:
+            self.game.screen.fill((0, 255, 0))
+            self.draw_text("LEVEL COMPLETED! press space to continue", self.game.SCREEN_WIDTH // 2, 100, 20)
 
 
 class EndState(BaseState):
@@ -158,7 +196,7 @@ class EndState(BaseState):
         pass
 
     def render(self):
-        self.game.screen.fill((255, 0, 0))  # Red screen
+        self.game.screen.fill((255, 255, 0))
         # Draw game over elements here
-        self.draw_text("THE END.", self.game.HEIGHT // 2, self.game.WIDTH // 2, 100)
+        self.draw_text("THE END. Yay!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 100)
 
