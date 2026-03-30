@@ -1,5 +1,6 @@
 import pygame
 
+
 class BaseState:
     def __init__(self, game):
         self.game = game
@@ -9,7 +10,7 @@ class BaseState:
             self.game.running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
             self.game.running = False
-    def update(self):
+    def update(self, blinked=False):
         pass
 
     def render(self):
@@ -43,7 +44,7 @@ class StartState(BaseState):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.game.state = "TUTORIAL"
 
-    def update(self):
+    def update(self, blinked):
         pass
 
     def render(self):
@@ -67,7 +68,7 @@ class TutorialState(BaseState):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.game.state = "CALIBRATION"
 
-    def update(self):
+    def update(self, blinked):
         pass
 
     def render(self):
@@ -85,13 +86,33 @@ class CalibrationState(BaseState):
         super().__init__(game)
         self.blink_cnt = 0
 
-    def handle_events(self, event):
-        super().handle_events(event)
-        if self.blink_cnt == 10:
-            self.game.state = "GAMEPLAY"
+        #for the counter
+        self.r_val = 255
+        self.g_val = 0
 
-    def update(self):
-        pass
+        self.yellow_flag = False
+
+    def handle_events(self, event):
+        if self.blink_cnt >= 10:
+            self.game.state = "GAMEPLAY"
+        super().handle_events(event)
+
+    def update(self, blinked):
+        if blinked:
+            self.blink_cnt += 1
+            print(self.blink_cnt, self.blink_cnt >= 10)
+
+            if not self.yellow_flag:
+                self.g_val += 85
+            else:
+                self.r_val -= 85
+
+            if self.g_val >= 255:
+                self.g_val = 255
+                self.yellow_flag = True
+
+            if self.r_val < 0:
+                self.r_val = 0
 
     def render(self):
         self.game.screen.fill((40, 130, 255))
@@ -99,11 +120,11 @@ class CalibrationState(BaseState):
         title = "CALIBRATION"
         self.draw_text(title, self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 8, 100)
 
-        subtitle = f"look into the camera and blink 10 times"
+        subtitle = f"look into the camera and blink at least 10 times. Then press SPACE."
 
         self.draw_text(subtitle, self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 3, 25)
 
-        self.draw_text(str(self.blink_cnt), self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 3 * 2, 150, color=(255, 0, 0))
+        self.draw_text(str(self.blink_cnt), self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 3 * 2, 150, color=(self.r_val, self.g_val, 0))
 
 class GameplayState(BaseState):
     def __init__(self, game):
@@ -120,21 +141,24 @@ class GameplayState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
 
-    def update(self):
+
+    def update(self, blinked=False):
         pass
 
     def render(self):
         self.game.screen.fill((255, 255, 255))  # Yellow screen
-        # Draw pause menu here
+        self.draw_text("not done yet.", 100, 100, 50)
+
 
 class EndState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
 
-    def update(self):
+    def update(self, blinked=False):
         pass
 
     def render(self):
         self.game.screen.fill((255, 0, 0))  # Red screen
         # Draw game over elements here
+        self.draw_text("THE END.", self.game.HEIGHT // 2, self.game.WIDTH // 2, 100)
 

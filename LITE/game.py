@@ -1,5 +1,6 @@
 import pygame
 from LITE.states import *
+from LITE.get_blink import *
 
 next_state = {
     "start_screen" : "tutorial",
@@ -28,20 +29,27 @@ class Game:
             "END": EndState(self)
         }
 
+        self.blink_detector = BlinkDetector(self)
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return
+                    self.running = False
 
                 current_state = self.states[self.state]
                 current_state.handle_events(event)
 
-            current_state.update()
+
+            blinked = self.blink_detector.update()
+            current_state.update(blinked)
             current_state.render()
+
             pygame.display.flip()
             self.clock.tick(60)
+
+        self.blink_detector.release()
+        pygame.quit()
 
 
 if __name__ == "__main__":
