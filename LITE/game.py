@@ -10,6 +10,7 @@ next_state = {
 
 class Game:
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.init()
 
         self.running = True
@@ -32,6 +33,8 @@ class Game:
         self.blink_detector = BlinkDetector(self)
 
     def run(self):
+        pygame.mixer.music.load('main_title_theme.mp3') #!!
+        pygame.mixer.music.play(-1) #!!
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
