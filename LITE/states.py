@@ -124,6 +124,9 @@ class CalibrationState(BaseState):
         self.r_val = 255
         self.g_val = 0
 
+        #sfx
+        self.blink_sfx = pygame.mixer.Sound("hit_sfx.mp3")
+
         self.yellow_flag = False
 
     def handle_events(self, event):
@@ -134,7 +137,8 @@ class CalibrationState(BaseState):
     def update(self, blinked):
         if blinked:
             self.blink_cnt += 1
-            print(self.blink_cnt, self.blink_cnt >= 10)
+            self.blink_sfx.play()
+            # print(self.blink_cnt, self.blink_cnt >= 10)
 
             if not self.yellow_flag:
                 self.g_val += 85
