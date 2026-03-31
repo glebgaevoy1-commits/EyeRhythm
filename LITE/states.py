@@ -252,7 +252,7 @@ class GameplayState(BaseState):
     def render(self):
         current_time = pygame.time.get_ticks()
         label_size = abs(self.next_beat_time - current_time) / self.beat_interval
-        print(label_size)
+        # print(label_size)
 
         if not self.level_finished:
             self.game.screen.fill((255, 255, 255))
