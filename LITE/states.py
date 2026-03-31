@@ -49,7 +49,7 @@ class StartState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            self.game.state = "TUTORIAL"
+            self.game.state = "CALIBRATION"
 
     def update(self, blinked):
         pass
@@ -73,7 +73,7 @@ class TutorialState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            self.game.state = "CALIBRATION"
+            self.game.state = "DIFFICULTYSELECTION"
 
     def update(self, blinked):
         pass
@@ -101,7 +101,7 @@ class CalibrationState(BaseState):
 
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.blink_cnt >= 10: #try to make it automatic
-            self.game.state = "DIFFICULTYSELECTION"
+            self.game.state = "TUTORIAL"
         super().handle_events(event)
 
     def update(self, blinked):
