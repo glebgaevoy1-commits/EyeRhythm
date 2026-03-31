@@ -152,6 +152,7 @@ class GameplayState(BaseState):
 
         #LOGIC
         self.beat_interval = 2000
+        self.win_score = 5
         self.next_beat_time = pygame.time.get_ticks() + self.beat_interval
 
         self.level_finished = False
@@ -179,13 +180,16 @@ class GameplayState(BaseState):
 
             self.ball_size = abs(self.next_beat_time - current_time)
 
-        if self.hits >= 3:
+        if self.hits >= self.win_score:
             self.level_finished = True
 
     def render(self):
         if not self.level_finished:
             self.game.screen.fill((255, 255, 255))
             self.rball.draw(self.ball_size)
+
+            self.draw_text(f"Objective: score {self.win_score}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 20, "yellow")
+            self.draw_text(f"score: {self.hits}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 25, 15)
         else:
             self.game.screen.fill((0, 255, 0))
             self.draw_text("LEVEL COMPLETED! press space to continue", self.game.SCREEN_WIDTH // 2, 100, 20)
