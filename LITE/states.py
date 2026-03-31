@@ -79,7 +79,7 @@ class StartState(BaseState):
             self.game.state = "CALIBRATION"
 
     def update(self, blinked):
-        pygame.mixer.music.fadeout(3000)
+        pass
 
     def render(self):
         self.game.screen.fill((0, 0, 255))
@@ -225,6 +225,8 @@ class GameplayState(BaseState):
             self.game.state = "END"
 
     def update(self, blinked=False):
+        pygame.mixer.music.fadeout(3000)
+
         if not self.level_finished:
             current_time = pygame.time.get_ticks()
 

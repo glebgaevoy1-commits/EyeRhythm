@@ -11,6 +11,7 @@ print("PLEASE GIVE FEEDBACK AFTER PLAYING:", "https://forms.gle/gSq7NpUttBpvXb9s
 #pip install mediapipe, pygame, opencv-python
 
 #BUGS
+#fix setup in gameplay
 #score doesnt always increment
 #gameplay glitched at start
 #sounds weird
