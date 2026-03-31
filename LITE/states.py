@@ -7,7 +7,6 @@ from LITE.configs import precision_window
 
 from game_gui import Button, RythmBall
 
-
 class BaseState:
     def __init__(self, game):
         self.game = game
@@ -43,16 +42,38 @@ class BaseState:
         image_rect = image.get_rect(center=(x, y))
         self.game.screen.blit(image, image_rect)
 
-
+class SplashScreen(BaseState):
+    def __init__(self, game):
+        super().__init__(game)
+        self.caption_1_x = self.game.SCREEN_WIDTH * 2
+        self.caption_2_x = int(-self.game.SCREEN_WIDTH * 2.5)
+        self.caption_3_y = 0
+    def update(self, blinked):
+        self.caption_1_x -= 5
+        self.caption_2_x += 5
+        if self.caption_3_y < self.game.SCREEN_HEIGHT / 5 * 4:
+            self.caption_3_y += 5
+    def handle_events(self, event):
+        super().handle_events(event)
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            self.game.state = "START"
+    def render(self):
+        self.game.screen.fill("black")
+        self.draw_text("GLEB GAEVOY PRESENTS...", self.caption_1_x, self.game.SCREEN_HEIGHT // 2 - 75, 100)
+        self.draw_text("EYERHYTHM (prototype)", self.caption_2_x, self.game.SCREEN_HEIGHT // 2 + 25, 100)
+        self.draw_text("Press SPACE to skip.", self.game.SCREEN_WIDTH // 2, self.caption_3_y, 40)
 
 class StartState(BaseState):
+    def __init__(self, game):
+        super().__init__(game)
+
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.game.state = "CALIBRATION"
 
     def update(self, blinked):
-        pass
+        pygame.mixer.music.fadeout(5000)
 
     def render(self):
         self.game.screen.fill((0, 0, 255))
@@ -180,6 +201,7 @@ class GameplayState(BaseState):
         self.beat_interval = 2000
         self.win_score = 5
         self.next_beat_time = pygame.time.get_ticks() + self.beat_interval
+        self.hit = None
 
         self.level_finished = False
 
@@ -199,9 +221,11 @@ class GameplayState(BaseState):
             if blinked:
                 if self.next_beat_time - 200 <= current_time <= self.next_beat_time + 200: #change 200 to precision window from configs
                     self.hits += 1
+                    self.hit = True
                     print("HIT!", self.hits)
                 else:
                     self.misses += 1
+                    self.hit = False
                     print("MISS!", self.misses)
 
             self.ball_size = abs(self.next_beat_time - current_time)
@@ -214,6 +238,11 @@ class GameplayState(BaseState):
             self.game.screen.fill((255, 255, 255))
             self.rball.draw(self.ball_size)
 
+            if self.hit is not None:
+                if self.hit:
+                    self.draw_text(f"HIT!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, 30, "green")
+                else:
+                    self.draw_text(f"MISS!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, 30, "red")
             self.draw_text(f"Objective: score {self.win_score}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 20, "yellow")
             self.draw_text(f"score: {self.hits}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 25, 15)
         else:

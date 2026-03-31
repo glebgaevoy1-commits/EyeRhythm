@@ -21,8 +21,9 @@ class Game:
         pygame.display.set_caption("EyeRhythm 2026")
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
-        self.state = "START"  # Initial state
+        self.state = "SPLASH"  # Initial state
         self.states = {
+            "SPLASH": SplashScreen(self),
             "START": StartState(self),
             "CALIBRATION": CalibrationState(self),
             "TUTORIAL": TutorialState(self),
