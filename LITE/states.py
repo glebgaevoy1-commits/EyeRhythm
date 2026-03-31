@@ -46,7 +46,7 @@ class SplashScreen(BaseState):
     def __init__(self, game):
         super().__init__(game)
         self.caption_1_x = self.game.SCREEN_WIDTH * 2
-        self.caption_2_x = int(-self.game.SCREEN_WIDTH * 2.5)
+        self.caption_2_x = int(-self.game.SCREEN_WIDTH * 1.5)
         self.caption_3_y = 0
     def update(self, blinked):
         self.caption_1_x -= 5
@@ -73,7 +73,7 @@ class StartState(BaseState):
             self.game.state = "CALIBRATION"
 
     def update(self, blinked):
-        pygame.mixer.music.fadeout(5000)
+        pygame.mixer.music.fadeout(3000)
 
     def render(self):
         self.game.screen.fill((0, 0, 255))
@@ -234,15 +234,19 @@ class GameplayState(BaseState):
             self.level_finished = True
 
     def render(self):
+        current_time = pygame.time.get_ticks()
+        label_size = abs(self.next_beat_time - current_time) / self.beat_interval
+        print(label_size)
+
         if not self.level_finished:
             self.game.screen.fill((255, 255, 255))
             self.rball.draw(self.ball_size)
 
             if self.hit is not None:
                 if self.hit:
-                    self.draw_text(f"HIT!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, 30, "green")
+                    self.draw_text(f"HIT!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, int(30 * label_size), "green")
                 else:
-                    self.draw_text(f"MISS!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, 30, "red")
+                    self.draw_text(f"MISS!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 - 30, int(30 * label_size), "red")
             self.draw_text(f"Objective: score {self.win_score}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2, 20, "yellow")
             self.draw_text(f"score: {self.hits}", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2 + 25, 15)
         else:

@@ -11,6 +11,7 @@ print("PLEASE GIVE FEEDBACK AFTER PLAYING:", "https://forms.gle/gSq7NpUttBpvXb9s
 #pip install mediapipe, pygame, opencv-python
 
 #Игнорь, что дальше
+#fix start game bug
 #ADD LOOPING (resets)
 #ADD SFX
 #ADD SCORE
