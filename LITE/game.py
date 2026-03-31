@@ -24,8 +24,9 @@ class Game:
         self.state = "START"  # Initial state
         self.states = {
             "START": StartState(self),
-            "TUTORIAL": TutorialState(self),
             "CALIBRATION": CalibrationState(self),
+            "TUTORIAL": TutorialState(self),
+            "DIFFICULTYSELECTION": DifficultySelection(self),
             "GAMEPLAY": GameplayState(self),
             "END": EndState(self)
         }

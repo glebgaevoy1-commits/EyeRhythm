@@ -15,7 +15,9 @@ print("PLEASE GIVE FEEDBACK AFTER PLAYING:", "https://forms.gle/gSq7NpUttBpvXb9s
 #ADD SFX
 #ADD SCORE
 #ADD COUNTDOWN
-#ADD MUTE
+#ADD  MUTE
+#CHANGE UI TO BUTTONS
+#add subs to buttons
 
 #ADD DIFFICULTY SELECTION
 #ADD LEADERBOARD
@@ -27,3 +29,7 @@ print("PLEASE GIVE FEEDBACK AFTER PLAYING:", "https://forms.gle/gSq7NpUttBpvXb9s
 #scrolling titles
 #splash screen
 #splash text
+#gradient bg with visualizer
+#rythm hell
+#move blinks to event
+#fonts config

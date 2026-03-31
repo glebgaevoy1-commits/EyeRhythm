@@ -5,7 +5,7 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from LITE.configs import precision_window
 
-from game_gui import RythmBall
+from game_gui import Button, RythmBall
 
 
 class BaseState:
@@ -101,7 +101,7 @@ class CalibrationState(BaseState):
 
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.blink_cnt >= 10: #try to make it automatic
-            self.game.state = "GAMEPLAY"
+            self.game.state = "DIFFICULTYSELECTION"
         super().handle_events(event)
 
     def update(self, blinked):
@@ -132,6 +132,32 @@ class CalibrationState(BaseState):
         self.draw_text(subtitle, self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 3, 25)
 
         self.draw_text(str(self.blink_cnt), self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 3 * 2, 150, color=(self.r_val, self.g_val, 0))
+
+class DifficultySelection(BaseState):
+    def __init__(self, game):
+        super().__init__(game)
+
+        #UI
+        self.continue_button = Button(self.game.screen, (self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 5 * 4), (500, 100), "cyan", text="CONTINUE")
+
+    def handle_events(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            self.game.state = "GAMEPLAY"
+        if self.continue_button.is_clicked(event):
+            self.game.state = "GAMEPLAY"
+
+        super().handle_events(event)
+
+    def update(self, blinked=False):
+        pass
+
+    def render(self):
+        self.game.screen.fill("blue")
+        self.draw_text("DIFFICULTY SELECTION", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 5, 50, "red")
+        self.draw_text("NOT DONE YET :) just press the button below.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 5 * 3, 30)
+        self.continue_button.draw()
+        #buttons: speed, needed_score, game_mode maybe even
+
 
 class GameplayState(BaseState):
     def __init__(self, game):
