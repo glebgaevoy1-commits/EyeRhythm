@@ -11,15 +11,21 @@ class BaseState:
     def __init__(self, game):
         self.game = game
         self.font_path = "VCR_OSD_MONO.ttf"
+        self.initialized = False
     def handle_events(self, event):
         if event.type == pygame.QUIT:
             self.game.running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
             self.game.running = False
     def update(self, blinked=False):
-        pass
+        if not self.initialized:
+            self.setup()
+            self.initialized = True
 
     def render(self):
+        pass
+
+    def setup(self):
         pass
 
     def draw_text(self, text, x, y, font_size=30, color=(255, 255, 255)):
@@ -197,6 +203,10 @@ class GameplayState(BaseState):
         self.rball = RythmBall(self.game.screen, (self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2))
         self.ballsize = 1000
 
+        #SFX
+        self.hit_sfx = pygame.mixer.Sound("hit_sfx.mp3")
+        self.miss_sfx = pygame.mixer.Sound("miss_sfx.mp3")
+
         #LOGIC
         self.beat_interval = 2000
         self.win_score = 5
@@ -222,10 +232,12 @@ class GameplayState(BaseState):
                 if self.next_beat_time - 200 <= current_time <= self.next_beat_time + 200: #change 200 to precision window from configs
                     self.hits += 1
                     self.hit = True
+                    self.hit_sfx.play()
                     print("HIT!", self.hits)
                 else:
                     self.misses += 1
                     self.hit = False
+                    self.miss_sfx.play()
                     print("MISS!", self.misses)
 
             self.ball_size = abs(self.next_beat_time - current_time)
@@ -255,13 +267,23 @@ class GameplayState(BaseState):
 
 
 class EndState(BaseState):
+    def __init__(self, game):
+        super().__init__(game)
+        self.sound_played = False
+
+    def setup(self):
+        win_sfx = pygame.mixer.Sound("win_sfx.mp3")
+        if not self.sound_played:
+            win_sfx.play()
+            self.sound_played = True
+
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_r:  # try to make it automatic
             self.game.state = "START"
 
     def update(self, blinked=False):
-        pass
+        self.setup()
 
     def render(self):
         self.game.screen.fill((255, 255, 0))

@@ -10,8 +10,14 @@ print("PLEASE GIVE FEEDBACK AFTER PLAYING:", "https://forms.gle/gSq7NpUttBpvXb9s
 #ЗАПУСТИ ЭТО В ТЕРМИНАЛЕ, ПЕРЕД ТЕМ КАК ЗАПУСКАТЬ main.py
 #pip install mediapipe, pygame, opencv-python
 
+#BUGS
+#score doesnt always increment
+#gameplay glitched at start
+#sounds weird
+#ding attack slow
+
 #Игнорь, что дальше
-#fix start game bug
+#move buzzer to green screen
 #ADD LOOPING (resets)
 #ADD SFX
 #ADD SCORE
