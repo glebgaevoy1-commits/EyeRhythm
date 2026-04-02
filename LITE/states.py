@@ -131,6 +131,10 @@ class CalibrationState(BaseState):
 
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.blink_cnt >= 10: #try to make it automatic
+            self.blink_cnt = 0
+            self.r_val = 255
+            self.g_val = 0
+            self.yellow_flag = False
             self.game.state = "TUTORIAL"
         super().handle_events(event)
 
@@ -222,6 +226,14 @@ class GameplayState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.level_finished: #try to make it automatic
+            self.level_finished = False
+            self.hits = 0
+            self.misses = 0
+            self.beatcnt = 0
+            self.misses_in_a_row = 0
+            self.hit = None
+
+            self.total_blinks = 0
             self.game.state = "END"
 
     def update(self, blinked=False):
@@ -284,7 +296,9 @@ class EndState(BaseState):
     def handle_events(self, event):
         super().handle_events(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_r:  # try to make it automatic
-            self.game.state = "START"
+            self.game.state = "DIFFICULTYSELECTION"
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+            self.game.state = "CALIBRATION"
 
     def update(self, blinked=False):
         self.setup()
@@ -294,6 +308,6 @@ class EndState(BaseState):
         # Draw game over elements here
         self.draw_text("THE END. yay1!11!", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 4, 100, "black")
         self.draw_text("pls give feedback :3", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 6 * 4, 50, "red")
-        self.draw_text("Press q to quit.   Press r to restart. (buggy)", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 6 * 5, 25, "Black")
+        self.draw_text("Press q to quit.   Press r to play again.   Press c to recalibrate.", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 6 * 5, 25, "Black")
 
         self.draw_image("feedback_qr.png", self.game.SCREEN_WIDTH // 2, self.game.SCREEN_HEIGHT // 2)
